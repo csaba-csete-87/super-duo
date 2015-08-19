@@ -11,6 +11,7 @@ import java.io.InputStream;
 /**
  * Created by saj on 11/01/15.
  */
+
 public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
 
@@ -25,14 +26,15 @@ public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
             InputStream in = new java.net.URL(urlDisplay).openStream();
             bookCover = BitmapFactory.decodeStream(in);
         } catch (Exception e) {
-            Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
         return bookCover;
     }
 
     protected void onPostExecute(Bitmap result) {
-        bmImage.setImageBitmap(result);
+        if (result != null) { //leave placeholder image alone
+            bmImage.setImageBitmap(result);
+        }
     }
 }
 

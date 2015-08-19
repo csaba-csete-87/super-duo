@@ -1,18 +1,18 @@
 package it.jaschke.alexandria;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by saj on 27/01/15.
  */
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preferences);
+        setContentView(R.layout.activity_settings);
 
-
+        getFragmentManager().beginTransaction().replace(R.id.container, new SettingsFragment()).commit();
     }
 }
