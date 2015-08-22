@@ -76,5 +76,6 @@
     <color name="red13">#FFCACA</color>
     <color name="red14">#FFE4E4</color>
 
-
+    <color name="material_light_green_500">#8BC34A</color>
+    <color name="material_light_green_800">#558B2F</color>
 </resources>
