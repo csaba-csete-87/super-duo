@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 
@@ -22,14 +24,15 @@ public class BookListAdapter extends CursorAdapter {
 
 
     public static class ViewHolder {
-        public final ImageView bookCover;
-        public final TextView bookTitle;
-        public final TextView bookSubTitle;
+        @Bind(R.id.fullBookCover)
+        ImageView bookCover;
+        @Bind(R.id.listBookTitle)
+        TextView bookTitle;
+        @Bind(R.id.listBookSubTitle)
+        TextView bookSubTitle;
 
         public ViewHolder(View view) {
-            bookCover = (ImageView) view.findViewById(R.id.fullBookCover);
-            bookTitle = (TextView) view.findViewById(R.id.listBookTitle);
-            bookSubTitle = (TextView) view.findViewById(R.id.listBookSubTitle);
+            ButterKnife.bind(this, view);
         }
     }
 

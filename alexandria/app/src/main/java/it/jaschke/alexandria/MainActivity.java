@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             setContentView(R.layout.activity_main);
         }
 
-        messageReciever = new MessageReciever();
+        messageReciever = new MessageReceiver();
         IntentFilter filter = new IntentFilter(MESSAGE_EVENT);
         LocalBroadcastManager.getInstance(this).registerReceiver(messageReciever, filter);
 
@@ -84,11 +84,18 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment nextFragment;
+        View rightContainer = findViewById(R.id.right_container);
+        if (isTablet() && rightContainer != null) {
+            rightContainer.setVisibility(View.GONE);
+        }
 
         switch (position) {
             default:
             case 0:
                 nextFragment = new ListOfBooks();
+                if (isTablet() && rightContainer != null) {
+                    rightContainer.setVisibility(View.VISIBLE);
+                }
                 break;
             case 1:
                 nextFragment = new AddBook();
@@ -159,18 +166,20 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         BookDetail fragment = new BookDetail();
         fragment.setArguments(args);
 
-        int id = R.id.container;
         if (findViewById(R.id.right_container) != null) {
-            id = R.id.right_container;
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.right_container, fragment)
+                    .addToBackStack("Book Detail")
+                    .commit();
+        } else {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack("Book Detail")
+                    .commit();
         }
-        getSupportFragmentManager().beginTransaction()
-                .replace(id, fragment)
-                .addToBackStack("Book Detail")
-                .commit();
-
     }
 
-    private class MessageReciever extends BroadcastReceiver {
+    private class MessageReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getStringExtra(MESSAGE_KEY) != null) {
@@ -184,8 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     }
 
     private boolean isTablet() {
-        return (getApplicationContext().getResources().getConfiguration().screenLayout
-                & Configuration.SCREENLAYOUT_SIZE_MASK)
+        return (getApplicationContext().getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)
                 >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 

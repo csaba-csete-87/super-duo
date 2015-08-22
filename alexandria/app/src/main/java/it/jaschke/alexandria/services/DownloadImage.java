@@ -12,6 +12,7 @@ import java.io.InputStream;
  * Created by saj on 11/01/15.
  */
 
+@Deprecated
 public class DownloadImage extends AsyncTask<String, Void, Bitmap> {
     ImageView bmImage;
 
