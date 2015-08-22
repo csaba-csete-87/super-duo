@@ -26,4 +26,4 @@ proguard/
 # Log Files
 *.log
 
-Football_Scores-master/football-scores-api-key.txt
+/*/football-scores-api-key.txt
