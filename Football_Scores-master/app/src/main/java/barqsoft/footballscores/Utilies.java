@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class Utilies {
 
-    public static final String AUTH_TOKEN = "7412a5e66c5143aaab54d5e6679e53a8";
+    public static final String AUTH_TOKEN = "";
 
     public static final int CHAMPIONS_LEAGUE = 405;
     public static final int PRIMERA_DIVISION = 399;
