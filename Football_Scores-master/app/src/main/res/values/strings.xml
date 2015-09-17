@@ -48,4 +48,5 @@
     <string name="away_team_name">Away team name</string>
     <string name="no_scores_for_you">No scores for you!</string>
     <string name="match_date">Match Date</string>
+    <string name="loading">Loading scores</string>
 </resources>

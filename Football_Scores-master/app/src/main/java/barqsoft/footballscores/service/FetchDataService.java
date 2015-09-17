@@ -56,7 +56,6 @@ public class FetchDataService extends IntentService {
 
         Uri fetch_build = Uri.parse(BASE_URL).buildUpon().
                 appendQueryParameter(QUERY_TIME_FRAME, timeFrame).build();
-        //Log.v(LOG_TAG, fetch_build.toString()); //log spam
         HttpURLConnection m_connection = null;
         BufferedReader reader = null;
         String JSON_data = null;
@@ -211,15 +210,6 @@ public class FetchDataService extends IntentService {
                 match_values.put(DatabaseContract.scores_table.AWAY_GOALS_COL, Away_goals);
                 match_values.put(DatabaseContract.scores_table.LEAGUE_COL, League);
                 match_values.put(DatabaseContract.scores_table.MATCH_DAY, match_day);
-                //log spam
-
-//                Log.v(LOG_TAG, match_id);
-//                Log.v(LOG_TAG, mDate);
-//                Log.v(LOG_TAG, mTime);
-//                Log.v(LOG_TAG, Home);
-//                Log.v(LOG_TAG, Away);
-//                Log.v(LOG_TAG, Home_goals);
-//                Log.v(LOG_TAG, Away_goals);
 
                 matchesArray.add(new Match(Home, Away, mDate, Home_goals, Away_goals));
 
@@ -231,13 +221,10 @@ public class FetchDataService extends IntentService {
             editor.putString("matchesJsonString", matchesJsonString);
             editor.commit();
 
-            int inserted_data;
             ContentValues[] insert_data = new ContentValues[values.size()];
             values.toArray(insert_data);
-            inserted_data = mContext.getContentResolver().bulkInsert(
-                    DatabaseContract.BASE_CONTENT_URI, insert_data);
+            mContext.getContentResolver().bulkInsert(DatabaseContract.BASE_CONTENT_URI, insert_data);
 
-            Log.v(LOG_TAG, "Successfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
         }
