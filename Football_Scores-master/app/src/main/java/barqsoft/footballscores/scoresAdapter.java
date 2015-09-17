@@ -13,7 +13,7 @@ import android.widget.TextView;
 /**
  * Created by yehya khaled on 2/26/2015.
  */
-public class scoresAdapter extends CursorAdapter {
+public class ScoresAdapter extends CursorAdapter {
     public static final int COL_HOME = 3;
     public static final int COL_AWAY = 4;
     public static final int COL_HOME_GOALS = 6;
@@ -26,13 +26,13 @@ public class scoresAdapter extends CursorAdapter {
     public double detail_match_id = 0;
     private String FOOTBALL_SCORES_HASHTAG = "#Football_Scores";
 
-    public scoresAdapter(Context context, Cursor cursor, int flags) {
+    public ScoresAdapter(Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
     }
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View mItem = LayoutInflater.from(context).inflate(R.layout.scores_list_item, parent, false);
+        View mItem = LayoutInflater.from(context).inflate(R.layout.list_item_scores, parent, false);
         ViewHolder mHolder = new ViewHolder(mItem);
         mItem.setTag(mHolder);
         //Log.v(FetchScoreTask.LOG_TAG,"new View inflated");
@@ -57,7 +57,7 @@ public class scoresAdapter extends CursorAdapter {
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View v = vi.inflate(R.layout.detail_fragment, null);
+        View v = vi.inflate(R.layout.fragment_detail, null);
         ViewGroup container = (ViewGroup) view.findViewById(R.id.details_fragment_container);
         if (mHolder.match_id == detail_match_id) {
             //Log.v(FetchScoreTask.LOG_TAG,"will insert extraView");

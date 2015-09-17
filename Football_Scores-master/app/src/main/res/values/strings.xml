@@ -46,4 +46,6 @@
     <string name="match_data">Match data</string>
     <string name="away_team_crest">Away team crest</string>
     <string name="away_team_name">Away team name</string>
+    <string name="no_scores_for_you">No scores for you!</string>
+    <string name="match_date">Match Date</string>
 </resources>

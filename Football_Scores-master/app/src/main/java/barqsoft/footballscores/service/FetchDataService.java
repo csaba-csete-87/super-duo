@@ -4,7 +4,9 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -18,29 +20,32 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Vector;
 
 import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.Match;
 import barqsoft.footballscores.R;
+import barqsoft.footballscores.Utilies;
 
 /**
+ * Retrieves and parses football scores data from server.
  * Created by yehya khaled on 3/2/2015.
  */
-public class myFetchService extends IntentService {
-    public static final String LOG_TAG = "myFetchService";
+public class FetchDataService extends IntentService {
+    public static final String LOG_TAG = "FetchDataService";
 
-    public myFetchService() {
-        super("myFetchService");
+    public FetchDataService() {
+        super("FetchDataService");
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         getData("n2");
         getData("p2");
-
-        return;
     }
 
     private void getData(String timeFrame) {
@@ -60,12 +65,12 @@ public class myFetchService extends IntentService {
             URL fetch = new URL(fetch_build.toString());
             m_connection = (HttpURLConnection) fetch.openConnection();
             m_connection.setRequestMethod("GET");
-            m_connection.addRequestProperty("X-Auth-Token", "");
+            m_connection.addRequestProperty("X-Auth-Token", Utilies.AUTH_TOKEN);
             m_connection.connect();
 
             // Read the input stream into a String
             InputStream inputStream = m_connection.getInputStream();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             if (inputStream == null) {
                 // Nothing to do.
                 return;
@@ -77,7 +82,7 @@ public class myFetchService extends IntentService {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
                 // buffer for debugging.
-                buffer.append(line + "\n");
+                buffer.append(line).append("\n");
             }
 
             if (buffer.length() == 0) {
@@ -122,7 +127,6 @@ public class myFetchService extends IntentService {
     }
 
     private void processJSONdata(String JSONdata, Context mContext, boolean isReal) {
-
         final String SEASON_LINK = "http://api.football-data.org/alpha/soccerseasons/";
         final String MATCH_LINK = "http://api.football-data.org/alpha/fixtures/";
         final String FIXTURES = "fixtures";
@@ -138,23 +142,23 @@ public class myFetchService extends IntentService {
         final String MATCH_DAY = "matchday";
 
         //Match data
-        String League = null;
-        String mDate = null;
-        String mTime = null;
-        String Home = null;
-        String Away = null;
-        String Home_goals = null;
-        String Away_goals = null;
-        String match_id = null;
-        String match_day = null;
+        String League;
+        String mDate;
+        String mTime;
+        String Home;
+        String Away;
+        String Home_goals;
+        String Away_goals;
+        String match_id;
+        String match_day;
 
+        ArrayList<Match> matchesArray = new ArrayList<>();
 
         try {
             JSONArray matches = new JSONObject(JSONdata).getJSONArray(FIXTURES);
 
-
             //ContentValues to be inserted
-            Vector<ContentValues> values = new Vector<ContentValues>(matches.length());
+            Vector<ContentValues> values = new Vector<>(matches.length());
             for (int i = 0; i < matches.length(); i++) {
                 JSONObject match_data = matches.getJSONObject(i);
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).getString("href");
@@ -171,21 +175,21 @@ public class myFetchService extends IntentService {
                 mDate = match_data.getString(MATCH_DATE);
                 mTime = mDate.substring(mDate.indexOf("T") + 1, mDate.indexOf("Z"));
                 mDate = mDate.substring(0, mDate.indexOf("T"));
-                SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
+                SimpleDateFormat match_date = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss", Locale.getDefault());
                 match_date.setTimeZone(TimeZone.getTimeZone("UTC"));
                 try {
-                    Date parseddate = match_date.parse(mDate + mTime);
-                    SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm");
+                    Date parsedDate = match_date.parse(mDate + mTime);
+                    SimpleDateFormat new_date = new SimpleDateFormat("yyyy-MM-dd:HH:mm", Locale.getDefault());
                     new_date.setTimeZone(TimeZone.getDefault());
-                    mDate = new_date.format(parseddate);
+                    mDate = new_date.format(parsedDate);
                     mTime = mDate.substring(mDate.indexOf(":") + 1);
                     mDate = mDate.substring(0, mDate.indexOf(":"));
 
                     if (!isReal) {
                         //This if statement changes the dummy data's date to match our current date range.
-                        Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
-                        SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-                        mDate = mformat.format(fragmentdate);
+                        Date fragmentDate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                        mDate = simpleDateFormat.format(fragmentDate);
                     }
                 } catch (Exception e) {
                     Log.d(LOG_TAG, "error here!");
@@ -196,6 +200,7 @@ public class myFetchService extends IntentService {
                 Home_goals = match_data.getJSONObject(RESULT).getString(HOME_GOALS);
                 Away_goals = match_data.getJSONObject(RESULT).getString(AWAY_GOALS);
                 match_day = match_data.getString(MATCH_DAY);
+
                 ContentValues match_values = new ContentValues();
                 match_values.put(DatabaseContract.scores_table.MATCH_ID, match_id);
                 match_values.put(DatabaseContract.scores_table.DATE_COL, mDate);
@@ -216,15 +221,23 @@ public class myFetchService extends IntentService {
 //                Log.v(LOG_TAG, Home_goals);
 //                Log.v(LOG_TAG, Away_goals);
 
+                matchesArray.add(new Match(Home, Away, mDate, Home_goals, Away_goals));
+
                 values.add(match_values);
             }
-            int inserted_data = 0;
+            String matchesJsonString = Utilies.getJsonStringFromMatches(matchesArray);
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("matchesJsonString", matchesJsonString);
+            editor.commit();
+
+            int inserted_data;
             ContentValues[] insert_data = new ContentValues[values.size()];
             values.toArray(insert_data);
             inserted_data = mContext.getContentResolver().bulkInsert(
                     DatabaseContract.BASE_CONTENT_URI, insert_data);
 
-            //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
+            Log.v(LOG_TAG, "Successfully Inserted : " + String.valueOf(inserted_data));
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage());
         }

@@ -28,7 +28,7 @@ public class AppWidgetConfigure extends Activity {
 
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
 
-            RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.fragment_main);
+            RemoteViews views = new RemoteViews(this.getPackageName(), R.layout.layout_widget);
             appWidgetManager.updateAppWidget(mAppWidgetId, views);
 
             Intent resultValue = new Intent();

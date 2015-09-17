@@ -21,14 +21,14 @@ import java.util.Date;
 public class PagerFragment extends Fragment {
     public static final int NUM_PAGES = 5;
     public ViewPager mPagerHandler;
-    private myPageAdapter mPagerAdapter;
+    private SoccerScoresPagerAdapter mPagerAdapter;
     private MainScreenFragment[] viewFragments = new MainScreenFragment[5];
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_pager, container, false);
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
-        mPagerAdapter = new myPageAdapter(getChildFragmentManager());
+        mPagerAdapter = new SoccerScoresPagerAdapter(getChildFragmentManager());
         for (int i = 0; i < NUM_PAGES; i++) {
             Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 2) * 86400000));
             SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
@@ -40,7 +40,7 @@ public class PagerFragment extends Fragment {
         return rootView;
     }
 
-    private class myPageAdapter extends FragmentStatePagerAdapter {
+    private class SoccerScoresPagerAdapter extends FragmentStatePagerAdapter {
         @Override
         public Fragment getItem(int i) {
             return viewFragments[i];
@@ -51,7 +51,7 @@ public class PagerFragment extends Fragment {
             return NUM_PAGES;
         }
 
-        public myPageAdapter(FragmentManager fm) {
+        public SoccerScoresPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 

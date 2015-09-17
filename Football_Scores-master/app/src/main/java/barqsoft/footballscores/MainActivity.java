@@ -1,11 +1,14 @@
 package barqsoft.footballscores;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     public static int selected_match_id;
@@ -56,8 +59,13 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-            Intent start_about = new Intent(this, AboutActivity.class);
-            startActivity(start_about);
+//            Intent start_about = new Intent(this, AboutActivity.class);
+//            startActivity(start_about);
+
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String data = sharedPreferences.getString("matchesJsonString", "");
+
+            ArrayList<Match> matches = Utilies.getMatchesFromJsonString(data);
             return true;
         }
 
