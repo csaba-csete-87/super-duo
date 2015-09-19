@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
+ * List item view holder class.
  * Created by yehya khaled on 2/26/2015.
  */
 public class ViewHolder {

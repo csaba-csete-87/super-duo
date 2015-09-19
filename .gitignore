@@ -27,3 +27,4 @@ proguard/
 *.log
 
 Football_Scores-master/footbal-scores-api-key.txt
+*.hprof

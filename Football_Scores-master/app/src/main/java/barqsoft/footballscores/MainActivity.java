@@ -1,37 +1,21 @@
 package barqsoft.footballscores;
 
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
     public static int selected_match_id;
     public static int current_fragment = 2;
-    private final String save_tag = "Save Test";
     private PagerFragment my_main;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-//                .showImageForEmptyUri(R.drawable.ic_launcher)
-//                .showImageOnFail(R.drawable.ic_launcher)
-//                .showImageOnLoading(R.drawable.ic_launcher)
-//                .cacheInMemory(true)
-//                .cacheOnDisk(true)
-//                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
-//                .build();
-//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-//                .defaultDisplayImageOptions(displayImageOptions)
-//                .build();
-//        ImageLoader.getInstance().init(config);
 
         if (savedInstanceState == null) {
             my_main = new PagerFragment();
@@ -58,13 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-//            Intent start_about = new Intent(this, AboutActivity.class);
-//            startActivity(start_about);
+            Intent start_about = new Intent(this, AboutActivity.class);
+            startActivity(start_about);
 
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String data = sharedPreferences.getString("matchesJsonString", "");
-
-            ArrayList<Match> matches = Utilies.getMatchesFromJsonString(data);
             return true;
         }
 
@@ -80,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         current_fragment = savedInstanceState.getInt("Pager_Current");
         selected_match_id = savedInstanceState.getInt("Selected_match");
         my_main = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState, "my_main");

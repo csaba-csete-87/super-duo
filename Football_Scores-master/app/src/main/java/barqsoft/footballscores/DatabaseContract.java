@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
+ * The Database Contract.
  * Created by yehya khaled on 2/25/2015.
  */
 public class DatabaseContract {

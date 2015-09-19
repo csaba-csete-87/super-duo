@@ -14,7 +14,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/widget_spacing"
             android:contentDescription="@string/match_date"
-            android:gravity="left"
             android:text="@string/loading"
             android:textSize="@dimen/TeamNames" />
 

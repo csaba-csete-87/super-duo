@@ -7,9 +7,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
+ * Useful methods class.
  * Created by yehya khaled on 3/3/2015.
  */
-public class Utilies {
+public class Utilities {
 
     public static final String AUTH_TOKEN = "";
 

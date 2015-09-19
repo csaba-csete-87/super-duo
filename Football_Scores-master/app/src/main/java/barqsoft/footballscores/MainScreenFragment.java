@@ -21,9 +21,8 @@ import barqsoft.footballscores.service.FetchDataService;
 public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int SCORES_LOADER = 0;
-    public ScoresAdapter mAdapter;
+    public FootballScoresAdapter mAdapter;
     private String[] mDateFragment = new String[1];
-//    private int mLastSelectedItem = -1;
 
     public MainScreenFragment() {
     }
@@ -45,7 +44,7 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         final ListView scoresList = (ListView) rootView.findViewById(R.id.scores_list);
 
-        mAdapter = new ScoresAdapter(getActivity(), null, 0);
+        mAdapter = new FootballScoresAdapter(getActivity(), null, 0);
         scoresList.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(SCORES_LOADER, null, this);

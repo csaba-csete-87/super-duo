@@ -29,7 +29,7 @@ import java.util.Vector;
 import barqsoft.footballscores.DatabaseContract;
 import barqsoft.footballscores.Match;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.Utilies;
+import barqsoft.footballscores.Utilities;
 
 /**
  * Retrieves and parses football scores data from server.
@@ -64,7 +64,7 @@ public class FetchDataService extends IntentService {
             URL fetch = new URL(fetch_build.toString());
             m_connection = (HttpURLConnection) fetch.openConnection();
             m_connection.setRequestMethod("GET");
-            m_connection.addRequestProperty("X-Auth-Token", Utilies.AUTH_TOKEN);
+            m_connection.addRequestProperty("X-Auth-Token", Utilities.AUTH_TOKEN);
             m_connection.connect();
 
             // Read the input stream into a String
@@ -215,11 +215,11 @@ public class FetchDataService extends IntentService {
 
                 values.add(match_values);
             }
-            String matchesJsonString = Utilies.getJsonStringFromMatches(matchesArray);
+            String matchesJsonString = Utilities.getJsonStringFromMatches(matchesArray);
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("matchesJsonString", matchesJsonString);
-            editor.commit();
+            editor.apply();
 
             ContentValues[] insert_data = new ContentValues[values.size()];
             values.toArray(insert_data);

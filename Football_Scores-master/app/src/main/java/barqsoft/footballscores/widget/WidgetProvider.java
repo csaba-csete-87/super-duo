@@ -12,7 +12,7 @@ import java.util.Random;
 
 import barqsoft.footballscores.Match;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.Utilies;
+import barqsoft.footballscores.Utilities;
 
 public class WidgetProvider extends AppWidgetProvider {
 
@@ -26,7 +26,7 @@ public class WidgetProvider extends AppWidgetProvider {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             String data = sharedPreferences.getString("matchesJsonString", "");
 
-            ArrayList<Match> matches = Utilies.getMatchesFromJsonString(data);
+            ArrayList<Match> matches = Utilities.getMatchesFromJsonString(data);
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.layout_widget);
 
             if (matches != null && matches.size() > 0) {

@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * A Match model.
  * Created by Csabi on 17-Sep-15.
  */
 public class Match {
