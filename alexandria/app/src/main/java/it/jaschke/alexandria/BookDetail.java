@@ -1,9 +1,10 @@
 package it.jaschke.alexandria;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -17,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,10 +33,7 @@ import it.jaschke.alexandria.services.BookService;
 public class BookDetail extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String EAN_KEY = "EAN";
-    private final int LOADER_ID = 10;
-    private View rootView;
     private String ean;
-    private String bookTitle;
     private ShareActionProvider shareActionProvider;
 
     @Bind(R.id.fullBookTitle)
@@ -85,10 +82,11 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         Bundle arguments = getArguments();
         if (arguments != null) {
             ean = arguments.getString(BookDetail.EAN_KEY);
+            int LOADER_ID = 10;
             getLoaderManager().restartLoader(LOADER_ID, null, this);
         }
 
-        rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_full_book, container, false);
         ButterKnife.bind(this, rootView);
 
         return rootView;
@@ -115,20 +113,27 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         );
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
         if (!data.moveToFirst()) {
             return;
         }
 
-        bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
+        String bookTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.TITLE));
         mFullBookTitle.setText(bookTitle);
 
-        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-        shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
-        shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + bookTitle);
-        shareActionProvider.setShareIntent(shareIntent);
+        if (shareActionProvider != null) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            int currentApiVersion = android.os.Build.VERSION.SDK_INT;
+            if (currentApiVersion >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+            }
+            shareIntent.setType("text/plain");
+            shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + bookTitle);
+            shareActionProvider.setShareIntent(shareIntent);
+
+        }
 
         String bookSubTitle = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.SUBTITLE));
         mFullBookSubTitle.setText(bookSubTitle);
@@ -137,7 +142,7 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         mFullBookDesc.setText(desc);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        if(authors != null){
+        if (authors != null) {
             String[] authorsArr = authors.split(",");
             mAuthors.setLines(authorsArr.length);
             mAuthors.setText(authors.replace(",", "\n"));

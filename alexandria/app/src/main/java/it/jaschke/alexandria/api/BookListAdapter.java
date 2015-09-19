@@ -18,6 +18,7 @@ import it.jaschke.alexandria.R;
 import it.jaschke.alexandria.data.AlexandriaContract;
 
 /**
+ * The adapter for the list of books.
  * Created by saj on 11/01/15.
  */
 public class BookListAdapter extends CursorAdapter {

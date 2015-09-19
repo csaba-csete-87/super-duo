@@ -7,6 +7,7 @@ import android.preference.PreferenceFragment;
 import android.text.TextUtils;
 
 /**
+ * Settings Fragment.
  * Created by Csabi on 17-Aug-15.
  */
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {

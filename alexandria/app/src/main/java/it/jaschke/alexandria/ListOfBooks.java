@@ -48,8 +48,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         ListOfBooks.this.restartLoader();
     }
 
-    private final int LOADER_ID = 10;
-
     public ListOfBooks() {
     }
 
@@ -75,11 +73,13 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
         bookList.setAdapter(bookListAdapter);
+        cursor.close();
 
         return rootView;
     }
 
     private void restartLoader() {
+        int LOADER_ID = 10;
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
