@@ -73,7 +73,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
 
         bookListAdapter = new BookListAdapter(getActivity(), cursor, 0);
         bookList.setAdapter(bookListAdapter);
-        cursor.close();
 
         return rootView;
     }
